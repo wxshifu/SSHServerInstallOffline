@@ -1,0 +1,120 @@
+{
+  "name": "offlineserverinstall",
+  "displayName": "Offline Server Install",
+  "description": "离线安装服务器文件",
+  "version": "0.0.1",
+  "icon": "resources/icon.svg",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onView:offlineserverinstall.view"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "offlineserverinstall.selectPath",
+        "title": "选择目标路径"
+      },
+      {
+        "command": "offlineserverinstall.download",
+        "title": "下载服务器文件"
+      },
+      {
+        "command": "getCommitId",
+        "title": "获取 Commit ID"
+      }
+    ],
+    "configuration": {
+      "title": "离线服务器安装",
+      "properties": {
+        "offlineserverinstall.architectures": {
+          "type": "array",
+          "default": [
+            "x64"
+          ],
+          "description": "远程服务器架构",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "x64",
+              "arm64"
+            ]
+          }
+        },
+        "offlineserverinstall.operatingSystems": {
+          "type": "array",
+          "default": [
+            "linux"
+          ],
+          "description": "远程服务器操作系统",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "linux",
+              "darwin",
+              "win32"
+            ]
+          }
+        },
+        "offlineserverinstall.targetPath": {
+          "type": "string",
+          "default": "./Server",
+          "description": "服务器文件存储路径"
+        },
+        "offlineserverinstall.autoUpdateServerFile": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否在扩展激活时自动更新服务器文件"
+        },
+        "offlineserverinstall.autoCleanFiles": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否自动清理无用文件"
+        }
+      }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "offlineserverinstall",
+          "title": "离线服务器安装",
+          "icon": "resources/dark/install.svg"
+        }
+      ]
+    },
+    "views": {
+      "offlineserverinstall": [
+        {
+          "type": "webview",
+          "id": "offlineserverinstall.view",
+          "name": "离线服务器安装"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "20.x",
+    "eslint": "^8.54.0",
+    "glob": "^10.3.10",
+    "mocha": "^10.2.0",
+    "typescript": "^5.3.3",
+    "@vscode/test-electron": "^2.3.8"
+  },
+  "dependencies": {
+    "ssh2": "^1.15.0"
+  }
+}
