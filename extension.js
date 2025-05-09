@@ -36,7 +36,7 @@ class ExtensionInitializer {
 		
 		// 监听配置变化
 		vscode.workspace.onDidChangeConfiguration(e => {
-			if (e.affectsConfiguration('offlineserverinstall')) {
+			if (e.affectsConfiguration('sshserverinstalloffline')) {
 				ConfigManager.updateConfig();
 				console.log('配置已更新');
 			}
@@ -259,14 +259,14 @@ async function activate(context) {
 	// 执行初始化
 	const sidebarViewProvider = new SidebarViewProvider(context);
 	context.subscriptions.push(
-		vscode.window.registerWebviewViewProvider('offlineserverinstall.view', sidebarViewProvider)
+		vscode.window.registerWebviewViewProvider('sshserverinstalloffline.view', sidebarViewProvider)
 	);
 
 	if (!await ExtensionInitializer.initialize()) {
 		return;
 	}
 
-	console.log('Congratulations, your extension "offlineserverinstall" is now active!');
+	console.log('Congratulations, your extension "sshserverinstalloffline" is now active!');
 	const commitID = getCommitId();
 
 	// 获取配置
@@ -279,7 +279,7 @@ async function activate(context) {
 
 	// 注册命令
 	context.subscriptions.push(
-		vscode.commands.registerCommand('offlineserverinstall.selectPath', async () => {
+		vscode.commands.registerCommand('sshserverinstalloffline.selectPath', async () => {
 			const result = await vscode.window.showOpenDialog({
 				canSelectFiles: false,
 				canSelectFolders: true,
@@ -296,7 +296,7 @@ async function activate(context) {
 	);
 
 	context.subscriptions.push(
-		vscode.commands.registerCommand('offlineserverinstall.selectKey', async () => {
+		vscode.commands.registerCommand('sshserverinstalloffline.selectKey', async () => {
 			const result = await vscode.window.showOpenDialog({
 				canSelectFiles: true,
 				canSelectFolders: false,
@@ -319,7 +319,7 @@ async function activate(context) {
 
 	// 注册下载命令
 	context.subscriptions.push(
-		vscode.commands.registerCommand('offlineserverinstall.download', async () => {
+		vscode.commands.registerCommand('sshserverinstalloffline.download', async () => {
 			try {
 				const config = ConfigManager.getConfig();
 				const targetPath = config.targetPath;

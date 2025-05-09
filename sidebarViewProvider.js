@@ -34,16 +34,16 @@ class SidebarViewProvider {
         webviewView.webview.onDidReceiveMessage(async (data) => {
             switch (data.type) {
                 case 'download':
-                    await vscode.commands.executeCommand('offlineserverinstall.download');
+                    await vscode.commands.executeCommand('sshserverinstalloffline.download');
                     break;
                 case 'deleteFiles':
                     await this.deleteServerFiles();
                     break;
                 case 'selectPath':
-                    await vscode.commands.executeCommand('offlineserverinstall.selectPath');
+                    await vscode.commands.executeCommand('sshserverinstalloffline.selectPath');
                     break;
                 case 'selectKey':
-                    await vscode.commands.executeCommand('offlineserverinstall.selectKey');
+                    await vscode.commands.executeCommand('sshserverinstalloffline.selectKey');
                     break;
                 case 'updatePath':
                     await this.updatePathInSettings(data.value);
@@ -697,7 +697,7 @@ class SidebarViewProvider {
     // 更新架构设置
     async updateArchitectures(architectures) {
         try {
-            const config = vscode.workspace.getConfiguration('offlineserverinstall');
+            const config = vscode.workspace.getConfiguration('sshserverinstalloffline');
             await config.update('architectures', architectures, vscode.ConfigurationTarget.Global);
             ConfigManager.updateConfig();
             this.updateStatus('架构设置已更新！');
@@ -710,7 +710,7 @@ class SidebarViewProvider {
     // 更新系统设置
     async updateOperatingSystems(operatingSystems) {
         try {
-            const config = vscode.workspace.getConfiguration('offlineserverinstall');
+            const config = vscode.workspace.getConfiguration('sshserverinstalloffline');
             await config.update('operatingSystems', operatingSystems, vscode.ConfigurationTarget.Global);
             ConfigManager.updateConfig();
             this.updateStatus('系统设置已更新！');

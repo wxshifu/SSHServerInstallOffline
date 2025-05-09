@@ -10,7 +10,7 @@ class ConfigManager {
     }
 
     static updateConfig() {
-        const config = vscode.workspace.getConfiguration('offlineserverinstall');
+        const config = vscode.workspace.getConfiguration('sshserverinstalloffline');
         globalConfig = {
             architectures: config.get('architectures'),
             operatingSystems: config.get('operatingSystems'),
@@ -22,7 +22,7 @@ class ConfigManager {
     }
 
     static async updateTargetPath(newPath) {
-        const config = vscode.workspace.getConfiguration('offlineserverinstall');
+        const config = vscode.workspace.getConfiguration('sshserverinstalloffline');
         await config.update('targetPath', newPath, vscode.ConfigurationTarget.Global);
         this.updateConfig();
     }

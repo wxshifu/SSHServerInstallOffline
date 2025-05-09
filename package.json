@@ -1,7 +1,7 @@
 {
-  "name": "offlineserverinstall",
-  "displayName": "Offline Server Install",
-  "description": "离线安装服务器文件",
+  "name": "sshserverinstalloffline",
+  "displayName": "SSH Server Install Offline",
+  "description": "SSH服务器离线安装",
   "version": "0.0.1",
   "icon": "resources/icon.svg",
   "engines": {
@@ -11,28 +11,24 @@
     "Other"
   ],
   "activationEvents": [
-    "onView:offlineserverinstall.view"
+    "onView:sshserverinstalloffline.view"
   ],
   "main": "./extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "offlineserverinstall.selectPath",
+        "command": "sshserverinstalloffline.selectPath",
         "title": "选择目标路径"
       },
       {
-        "command": "offlineserverinstall.download",
+        "command": "sshserverinstalloffline.download",
         "title": "下载服务器文件"
-      },
-      {
-        "command": "getCommitId",
-        "title": "获取 Commit ID"
       }
     ],
     "configuration": {
       "title": "离线服务器安装",
       "properties": {
-        "offlineserverinstall.architectures": {
+        "sshserverinstalloffline.architectures": {
           "type": "array",
           "default": [
             "x64"
@@ -47,7 +43,7 @@
             ]
           }
         },
-        "offlineserverinstall.operatingSystems": {
+        "sshserverinstalloffline.operatingSystems": {
           "type": "array",
           "default": [
             "linux"
@@ -63,17 +59,17 @@
             ]
           }
         },
-        "offlineserverinstall.targetPath": {
+        "sshserverinstalloffline.targetPath": {
           "type": "string",
           "default": "./Server",
           "description": "服务器文件存储路径"
         },
-        "offlineserverinstall.autoUpdateServerFile": {
+        "sshserverinstalloffline.autoUpdateServerFile": {
           "type": "boolean",
           "default": false,
           "description": "是否在扩展激活时自动更新服务器文件"
         },
-        "offlineserverinstall.autoCleanFiles": {
+        "sshserverinstalloffline.autoCleanFiles": {
           "type": "boolean",
           "default": false,
           "description": "是否自动清理无用文件"
@@ -83,17 +79,17 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "offlineserverinstall",
+          "id": "sshserverinstalloffline",
           "title": "离线服务器安装",
           "icon": "resources/dark/install.svg"
         }
       ]
     },
     "views": {
-      "offlineserverinstall": [
+      "sshserverinstalloffline": [
         {
           "type": "webview",
-          "id": "offlineserverinstall.view",
+          "id": "sshserverinstalloffline.view",
           "name": "离线服务器安装"
         }
       ]
