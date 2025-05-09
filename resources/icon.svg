@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
-    <line x1="8" y1="8" x2="16" y2="8" stroke="currentColor" stroke-width="2"/>
-    <line x1="8" y1="12" x2="16" y2="12" stroke="currentColor" stroke-width="2"/>
-    <line x1="8" y1="16" x2="16" y2="16" stroke="currentColor" stroke-width="2"/>
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="16" y="16" width="96" height="96" rx="16" fill="#007ACC"/>
+    <path d="M40 40H88V48H40V40ZM40 56H88V64H40V56ZM40 72H88V80H40V72Z" fill="white"/>
 </svg> 

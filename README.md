@@ -1,65 +1,160 @@
-# sshserverinstalloffline README
+# 🚀 SSH Server Install Offline
 
-This is the README for your extension "sshserverinstalloffline". After writing up a brief description, we recommend including the following sections.
+<div align="center">
 
-## Features
+[![VS Code Version](https://img.shields.io/badge/VS%20Code-1.85.0+-blue)](https://code.visualstudio.com/)
+[![Node.js Version](https://img.shields.io/badge/Node.js-20.x-green)](https://nodejs.org/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+一个强大的 VS Code 扩展，用于离线安装和管理 VS Code/Cursor 远程服务器。
 
-For example if there is an image subfolder under your extension project workspace:
+[English](./README.en.md) | [简体中文](./README.md)
 
-\!\[feature X\]\(images/feature-x.png\)
+</div>
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+## ✨ 功能特性
 
-## Requirements
+- 🖥️ **多平台支持**
+  - 支持多种架构（x64, arm64）
+  - 支持多种操作系统（Linux, macOS, Windows）
+  - 自动检测服务器架构和操作系统
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+- 🔄 **离线部署**
+  - 支持离线下载 VS Code/Cursor 远程服务器文件
+  - 提供图形化界面进行服务器部署
+  - 支持批量下载和部署
 
-## Extension Settings
+- 🔐 **安全认证**
+  - 支持 SSH 密码认证
+  - 支持 SSH 密钥认证
+  - 支持密钥密码保护
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+## 📋 系统要求
 
-For example:
+- **VS Code**: 1.85.0 或更高版本
+- **Node.js**: 20.x 或更高版本
+- **操作系统**:
+  - Windows 10/11
+  - macOS 10.15+
+  - Linux (主流发行版)
 
-This extension contributes the following settings:
+## 🚀 快速开始
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+1. **安装扩展**
+   - 在 VS Code 扩展市场搜索 "SSH Server Install Offline"
+   - 点击安装
 
-## Known Issues
+2. **配置设置**
+   - 在 VS Code 侧边栏找到"离线服务器安装"图标
+   - 设置目标路径
+   - 选择需要的架构和操作系统
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+3. **下载文件**
+   - 点击"下载离线服务器文件"
+   - 等待下载完成
 
-## Release Notes
+4. **部署服务器**
+   - 配置 SSH 连接信息
+   - 点击"部署到服务器"
+   - 等待部署完成
 
-Users appreciate release notes as you update your extension.
+## ⚙️ 配置项
 
-### 1.0.0
+### 架构设置
+```jsonc
+{
+  "offlineserverinstall.architectures": [
+    "x64",    // Intel/AMD 64位架构
+    "arm64"   // ARM 64位架构
+  ]
+}
+```
 
-Initial release of ...
+### 操作系统设置
+```jsonc
+{
+  "offlineserverinstall.operatingSystems": [
+    "linux",  // Linux 系统
+    "darwin", // macOS 系统
+    "win32"   // Windows 系统
+  ]
+}
+```
 
-### 1.0.1
+### 目标路径
+```jsonc
+{
+  "offlineserverinstall.targetPath": "./Server"  // 服务器文件存储路径
+}
+```
 
-Fixed issue #.
+### 自动更新
+```jsonc
+{
+  "offlineserverinstall.autoUpdateServerFile": false  // 是否自动更新服务器文件
+}
+```
 
-### 1.1.0
+### 自动清理
+```jsonc
+{
+  "offlineserverinstall.autoCleanFiles": false  // 是否自动清理无用文件
+}
+```
 
-Added features X, Y, and Z.
+## 💻 开发
+
+### 环境准备
+```bash
+# 克隆仓库
+git clone https://github.com/yourusername/sshserverinstalloffline.git
+
+# 安装依赖
+npm install
+
+# 运行测试
+npm test
+
+# 打包扩展
+vsce package
+```
+
+### 项目结构
+```
+.
+├── extension.js          # 扩展入口文件
+├── sidebarViewProvider.js # 侧边栏视图提供者
+├── configManager.js      # 配置管理器
+├── resources/           # 资源文件
+│   ├── icon.png        # 扩展图标
+│   └── dark/          # 暗色主题资源
+│       └── install.png # 侧边栏图标
+└── package.json        # 项目配置文件
+```
+
+## 🛠️ 技术栈
+
+- **VS Code Extension API**: 扩展开发框架
+- **Node.js**: 运行时环境
+- **SSH2**: SSH 连接和文件传输
+- **HTML/CSS/JavaScript**: WebView 界面开发
+
+## 🤝 贡献
+
+欢迎提交 Issue 和 Pull Request！在提交之前，请确保：
+
+1. 更新测试用例
+2. 更新文档
+3. 遵循代码规范
+
+## 📄 许可证
+
+本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件
 
 ---
 
-## Working with Markdown
+<div align="center">
 
-You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
+**SSH Server Install Offline** ©2024 Created by [ShiFu]
 
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+</div>

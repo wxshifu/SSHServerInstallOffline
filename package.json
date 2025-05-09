@@ -3,7 +3,7 @@
   "displayName": "SSH Server Install Offline",
   "description": "SSH服务器离线安装",
   "version": "0.0.1",
-  "icon": "resources/icon.svg",
+  "icon": "resources/icon.png",
   "engines": {
     "vscode": "^1.85.0"
   },
