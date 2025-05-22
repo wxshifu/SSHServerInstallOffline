@@ -6,7 +6,6 @@ const path = require('path');
 const https = require('https');
 const SidebarViewProvider = require('./sidebarViewProvider');
 const ConfigManager = require('./configManager');
-
 // 全局变量
 let productInfo = null;
 
@@ -89,7 +88,8 @@ class DownloadManager {
 				const fileUrl = `${baseUrl}/${commitID}/vscode-server-${os}-${arch}.tar.gz`;
 				const filePath = path.join(targetPath, `${this.productInfo.nameShort}-${os}-${arch}-${commitID}.tar.gz`);
 				console.log("VS Code 下载地址:" + fileUrl);
-
+				vscode.window.showInformationMessage(`VS Code 下载: ${this.productInfo.nameShort}-${os}-${arch}-${commitID}.tar.gz`);
+				
 				if (this.checkFileExists(filePath)) {
 					vscode.window.showInformationMessage(`文件已存在，跳过下载: ${filePath}`);
 					filesToKeep.add(path.basename(filePath));
@@ -102,6 +102,24 @@ class DownloadManager {
 				} catch (error) {
 					vscode.window.showErrorMessage(`下载 VS Code ${os}-${arch} 版本失败: ${error.message}`);
 				}
+			}
+		}
+		for (const arch of config.architectures) {
+			const fileUrl = `${baseUrl}/${commitID}/vscode_cli_alpine_${arch}_cli.tar.gz`;
+			const filePath = path.join(targetPath, `${this.productInfo.nameShort}-cli-${arch}.tar.gz`);
+			console.log("VS Code-CLI 下载地址:" + fileUrl);
+			vscode.window.showInformationMessage(`VS Code-CLI 下载: ${this.productInfo.nameShort}-cli-${arch}.tar.gz`);
+			if (this.checkFileExists(filePath)) {
+				vscode.window.showInformationMessage(`文件已存在，跳过下载: ${filePath}`);
+				filesToKeep.add(path.basename(filePath));
+				continue;
+			}
+
+			try {
+				await this.downloadSingleFile(fileUrl, filePath);
+				filesToKeep.add(path.basename(filePath));
+			} catch (error) {
+				vscode.window.showErrorMessage(`下载 VS Code-CLI ${arch} 版本失败: ${error.message}`);
 			}
 		}
 	}
@@ -130,6 +148,25 @@ class DownloadManager {
 				} catch (error) {
 					vscode.window.showErrorMessage(`下载 Cursor ${os}-${arch} 版本失败: ${error.message}`);
 				}
+			}
+		}
+		for (const arch of config.architectures) {
+			const fileUrl = `${baseUrl}/${commitID}/cli-alpine-${arch}.tar.gz`;
+			const filePath = path.join(targetPath, `${this.productInfo.nameShort}-cli-${arch}.tar.gz`);
+			console.log("Cursor-CLI 下载地址:" + fileUrl);
+			vscode.window.showInformationMessage(`Cursor-CLI 下载: ${this.productInfo.nameShort}-cli-${arch}.tar.gz`);
+
+			if (this.checkFileExists(filePath)) {
+				vscode.window.showInformationMessage(`文件已存在，跳过下载: ${filePath}`);
+				filesToKeep.add(path.basename(filePath));
+				continue;
+			}
+
+			try {
+				await this.downloadSingleFile(fileUrl, filePath);
+				filesToKeep.add(path.basename(filePath));
+			} catch (error) {
+				vscode.window.showErrorMessage(`下载 Cursor-CLI ${arch} 版本失败: ${error.message}`);
 			}
 		}
 	}
@@ -211,28 +248,7 @@ function getCommitId() {
 }
 
 // 检查服务器文件是否存在
-async function checkServerFiles(targetPath, commitID) {
-	const config = ConfigManager.getConfig();
-	const missingFiles = [];
-	const existingFiles = [];
 
-	for (const os of config.operatingSystems) {
-		for (const arch of config.architectures) {
-			const filePath = path.join(targetPath, `${productInfo.nameShort}-${os}-${arch}-${commitID}.tar.gz`);
-			if (fs.existsSync(filePath)) {
-				existingFiles.push(path.basename(filePath));
-			} else {
-				missingFiles.push(path.basename(filePath));
-			}
-		}
-	}
-
-	return {
-		missingFiles,
-		existingFiles,
-		allFilesExist: missingFiles.length === 0
-	};
-}
 
 // 执行下载操作
 async function executeDownload(targetPath, commitID, sidebarViewProvider) {
@@ -242,11 +258,13 @@ async function executeDownload(targetPath, commitID, sidebarViewProvider) {
 		await downloadManager.download(targetPath, commitID);
 		
 		// 下载完成后检查文件状态
-		const fileStatus = await checkServerFiles(targetPath, commitID);
+		const fileStatus = await sidebarViewProvider.checkServerFiles(targetPath, commitID);
 		if (fileStatus.allFilesExist) {
 			sidebarViewProvider.updateStatus('所有服务器文件已就绪！');
+			console.log("所有服务器文件已就绪！");
 		} else {
 			sidebarViewProvider.updateStatus(`下载完成，但缺少以下文件：\n${fileStatus.missingFiles.join('\n')}`);
+			console.log("下载完成，但缺少以下文件：\n" + fileStatus.missingFiles.join('\n'));
 		}
 	} catch (error) {
 		vscode.window.showErrorMessage(`下载失败: ${error.message}`);

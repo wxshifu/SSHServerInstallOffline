@@ -4,7 +4,7 @@
 
 [![VS Code Version](https://img.shields.io/badge/VS%20Code-1.85.0+-blue)](https://code.visualstudio.com/)
 [![Node.js Version](https://img.shields.io/badge/Node.js-20.x-green)](https://nodejs.org/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/supshifu/offlineserverinstall/blob/main/LICENSE)
 
 > ⚠️ **Note**: This English version is AI-generated. Any translation inaccuracies do not represent the author's original intent. For the most accurate information, please refer to the [Chinese version](./README.md).
 
@@ -151,12 +151,12 @@ Issues and Pull Requests are welcome! Before submitting, please ensure:
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/supshifu/offlineserverinstall/blob/main/LICENSE) file for details
 
 ---
 
 <div align="center">
 
-**SSH Server Install Offline** ©2024 Created by [ShiFu]
+**SSH Server Install Offline** ©2024 Created by [ShiFu](https://github.com/supshifu)
 
 </div> 

@@ -112,5 +112,9 @@
   },
   "dependencies": {
     "ssh2": "^1.15.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wxshifu/SSHServerInstallOffline.git"
   }
 }

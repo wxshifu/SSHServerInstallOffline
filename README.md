@@ -4,7 +4,7 @@
 
 [![VS Code Version](https://img.shields.io/badge/VS%20Code-1.85.0+-blue)](https://code.visualstudio.com/)
 [![Node.js Version](https://img.shields.io/badge/Node.js-20.x-green)](https://nodejs.org/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/supshifu/offlineserverinstall/blob/main/LICENSE)
 
 一个强大的 VS Code 扩展，用于离线安装和管理 VS Code/Cursor 远程服务器。
 
@@ -21,7 +21,7 @@
 
 - 🔄 **离线部署**
   - 支持离线下载 VS Code/Cursor 远程服务器文件
-  - 提供图形化界面进行服务器部署
+  - 提供图形化界面进行服务器部署`
   - 支持批量下载和部署
 
 - 🔐 **安全认证**
@@ -149,12 +149,12 @@ vsce package
 
 ## 📄 许可证
 
-本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件
+本项目采用 MIT 许可证 - 详见 [LICENSE](https://github.com/supshifu/offlineserverinstall/blob/main/LICENSE) 文件
 
 ---
 
 <div align="center">
 
-**SSH Server Install Offline** ©2024 Created by [ShiFu]
+**SSH Server Install Offline** ©2024 Created by [ShiFu](https://github.com/supshifu)
 
 </div>

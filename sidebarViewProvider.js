@@ -79,8 +79,10 @@ class SidebarViewProvider {
             const fileStatus = await this.checkServerFiles(targetPath, commitID);
             if (fileStatus.allFilesExist) {
                 this.updateStatus('所有服务器文件已就绪！');
+                console.log("更新状态，所有服务器文件已就绪！");
             } else {
                 this.updateStatus(`缺少以下文件：\n${fileStatus.missingFiles.join('\n')}`);
+                console.log("更新状态，但缺少以下文件：\n" + fileStatus.missingFiles.join('\n'));
             }
         }
     }
@@ -107,18 +109,43 @@ class SidebarViewProvider {
         const config = ConfigManager.getConfig();
         const missingFiles = [];
         const existingFiles = [];
-
+        console.log("检查服务器文件是否存在");
         for (const os of config.operatingSystems) {
             for (const arch of config.architectures) {
                 const filePath = path.join(targetPath, `${this.getProductInfo().nameShort}-${os}-${arch}-${commitID}.tar.gz`);
                 if (fs.existsSync(filePath)) {
                     existingFiles.push(path.basename(filePath));
+                    console.log("文件存在: " + filePath);
                 } else {
                     missingFiles.push(path.basename(filePath));
+                    console.log("文件不存在: " + filePath);
                 }
             }
         }
-
+        if (this.getProductInfo().nameShort === 'Cursor') {
+            for (const arch of config.architectures) {
+            const filePath = path.join(targetPath, `${this.getProductInfo().nameShort}-cli-${arch}.tar.gz`);
+            if (fs.existsSync(filePath)) {
+                existingFiles.push(path.basename(filePath));
+                console.log("Cursor-CLI 文件存在: " + filePath);
+            } else {
+                missingFiles.push(path.basename(filePath));
+                console.log("Cursor-CLI 文件不存在: " + filePath);
+            }
+            }
+        }else if (this.getProductInfo().nameShort === 'VS Code') {
+            for (const arch of config.architectures) {
+                const filePath = path.join(targetPath, `${this.getProductInfo().nameShort}-cli-${arch}.tar.gz`);
+                if (fs.existsSync(filePath)) {
+                    existingFiles.push(path.basename(filePath));
+                    console.log("VS Code-CLI 文件存在: " + filePath);
+                } else {
+                    missingFiles.push(path.basename(filePath));
+                    console.log("VS Code-CLI 文件不存在: " + filePath);
+                }
+            }
+        }
+    
         return {
             missingFiles,
             existingFiles,
@@ -543,6 +570,7 @@ class SidebarViewProvider {
             }
 
             this.updateStatus('正在连接服务器...');
+            vscode.window.showInformationMessage('正在连接服务器...');
             conn = new Client();
 
             // 准备 SSH 配置
@@ -561,24 +589,29 @@ class SidebarViewProvider {
                         sshOptions.passphrase = sshConfig.passphrase;
                     }
                 } catch (error) {
+                    vscode.window.showErrorMessage(`读取私钥文件失败: ${error.message}`);
                     throw new Error(`读取私钥文件失败: ${error.message}`);
+                    
                 }
             }
 
             await new Promise((resolve, reject) => {
                 conn.on('ready', () => {
                     this.updateStatus('已连接到服务器，开始上传文件...');
+                    vscode.window.showInformationMessage('已连接到服务器，开始上传文件...');
                     console.log('开始上传文件...');
                     console.log(targetPath);
                     this.uploadAndDeployFiles(conn, targetPath, commitID, productInfo)
                         .then(resolve)
                         .catch(reject);
                 }).on('error', (err) => {
+                    vscode.window.showErrorMessage(`SSH 连接失败: ${err.message}`);
                     reject(new Error(`SSH 连接失败: ${err.message}`));
                 }).connect(sshOptions);
             });
 
-            this.updateStatus('部署完成！');
+            this.updateStatus('部署完成！如果无法连接，请尝试删除服务器和CLI文件，重新下载并部署！');
+            vscode.window.showInformationMessage('部署完成！如果无法连接，请尝试删除服务器和CLI文件，重新下载并部署！');
         } catch (error) {
             this.updateStatus(`部署失败: ${error.message}`);
             vscode.window.showErrorMessage(`部署失败: ${error.message}`);
@@ -593,6 +626,7 @@ class SidebarViewProvider {
     // 上传并部署文件
     async uploadAndDeployFiles(conn, targetPath, commitID, productInfo) {
         const isCursor = productInfo.nameShort === 'Cursor';
+        const isVSCode = productInfo.nameShort === 'Code';
         
         // 获取用户主目录
         const homeDir = await this.execCommand(conn, 'echo $HOME');
@@ -607,8 +641,8 @@ class SidebarViewProvider {
         console.log("远程基础路径: " + remoteBasePath);
 
         const serverPath = isCursor ? 
-            `${remoteBasePath}/cursor-vscode-server.tar.gz` :
-            `${remoteBasePath}/vscode-server.tar.gz`;
+            `${remoteBasePath}/cursor-${commitID}` :
+            `${remoteBasePath}/vscode-server`;
 
         // 创建远程目录
         await this.execCommand(conn, `mkdir -p ${remoteBasePath}`);
@@ -621,18 +655,45 @@ class SidebarViewProvider {
         const serverFile = path.join(targetPath, `${productInfo.nameShort}-${os}-${arch}-${commitID}.tar.gz`);
         if (fs.existsSync(serverFile)) {
             console.log("服务器文件存在: " + serverFile);
-            console.log("准备上传到: " + serverPath);
-            await this.uploadFile(conn, serverFile, serverPath);
+            console.log("准备上传到: " + serverPath + ".tar.gz");
+            await this.uploadFile(conn, serverFile, serverPath + ".tar.gz");
             console.log("服务器文件上传成功");
         } else {
             throw new Error(`服务器文件不存在: ${serverFile}`);
         }
+        if (isCursor) {
+            const cliFile = path.join(targetPath, `${productInfo.nameShort}-cli-${arch}.tar.gz`);
+            if (fs.existsSync(cliFile)) {
+                console.log("Cursor-CLI 文件存在: " + cliFile);
+                console.log("准备上传到: " + serverPath);
+                await this.uploadFile(conn, cliFile, serverPath);
+                console.log("Cursor-CLI 文件上传成功");
+            } else {
+                throw new Error(`Cursor-CLI 文件不存在: ${cliFile}`);
+            }
+        } else if (isVSCode) {
+            const cliFile = path.join(targetPath, `${productInfo.nameShort}-cli-${arch}.tar.gz`);
+            if (fs.existsSync(cliFile)) {
+                console.log("VS Code-CLI 文件存在: " + cliFile);
+                console.log("准备上传到: " + serverPath);
+                await this.uploadFile(conn, cliFile, serverPath);
+                console.log("VS Code-CLI 文件上传成功");
+            } else {
+                throw new Error(`VS Code-CLI 文件不存在: ${cliFile}`);
+            }
+        }
 
         // 解压文件
         if (isCursor) {
-            await this.execCommand(conn, `cd ${remoteBasePath} && tar -xzf ${remoteBasePath}/cursor-vscode-server.tar.gz -C ${remoteBasePath}/cli/servers/Stable-${commitID}/server --strip-components 1`);
-        } else {
-            await this.execCommand(conn, `cd ${remoteBasePath} && tar -xzf ${remoteBasePath}/vscode-server.tar.gz -C ${remoteBasePath}/cli/servers/Stable-${commitID}/server --strip-components 1`);
+            await this.execCommand(conn, `cd ${remoteBasePath} && tar -xzf ${serverPath}.tar.gz -C ${remoteBasePath}/cli/servers/Stable-${commitID}/server --strip-components 1 && rm -rf ${serverPath}.tar.gz`);
+            console.log("Cursor-Server 解压成功");
+            await this.execCommand(conn, `cd ${remoteBasePath} && tar -xzf ${serverPath} -C ${remoteBasePath}/ && rm -rf ${serverPath} && mv ./cursor  ./cursor-${commitID}`);
+            console.log("Cursor-Server-CLI 解压成功");
+        } else if (isVSCode) {
+            await this.execCommand(conn, `cd ${remoteBasePath} && tar -xzf ${serverPath}.tar.gz -C ${remoteBasePath}/cli/servers/Stable-${commitID}/server --strip-components 1 && rm -rf ${serverPath}.tar.gz`);
+            console.log("VSCode-Server 解压成功");
+            await this.execCommand(conn, `cd ${remoteBasePath} && tar -xzf ${serverPath} -C ${remoteBasePath}/ && rm -rf ${serverPath} && mv ./code  ./code-${commitID}`);
+            console.log("VSCode-Server-CLI 解压成功");
         }
     }
 
