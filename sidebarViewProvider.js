@@ -133,7 +133,7 @@ class SidebarViewProvider {
                 console.log("Cursor-CLI 文件不存在: " + filePath);
             }
             }
-        }else if (this.getProductInfo().nameShort === 'VS Code') {
+        }else if (this.getProductInfo().nameShort === 'Code') {
             for (const arch of config.architectures) {
                 const filePath = path.join(targetPath, `${this.getProductInfo().nameShort}-cli-${arch}.tar.gz`);
                 if (fs.existsSync(filePath)) {
